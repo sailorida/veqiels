@@ -18,3 +18,56 @@
 .fade-in-up {
   animation: blurFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.chatbox-corner {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 60;
+}
+
+.chatbox-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 9999px;
+  cursor: default;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  background: linear-gradient(oklch(100% 0 0/.62) 0%, oklch(95% .012 300/.45) 100%);
+  border: 1px solid oklch(100% 0 0/.45);
+  box-shadow: inset 0 1px oklch(100% 0 0/.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.chatbox-frame-wrap {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  right: 0;
+  width: min(340px, 85vw);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid oklch(100% 0 0/.45);
+  box-shadow: 0 8px 28px oklch(40% .03 280/.15);
+  background: var(--background);
+}
+
+.chatbox-corner:hover .chatbox-frame-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.chatbox-frame-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: none;
+}
