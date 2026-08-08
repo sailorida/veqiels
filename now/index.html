@@ -85,5 +85,25 @@
 
 <script src="../assets/navigation.js"></script>
 
+  <script>
+(function () {
+  var corner = document.getElementById('chatbox-corner');
+  var toggle = document.getElementById('chatbox-toggle');
+  var panel = document.getElementById('chatbox-frame-wrap');
+  if (!corner || !toggle || !panel) return;
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    panel.classList.toggle('is-open');
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!corner.contains(e.target)) {
+      panel.classList.remove('is-open');
+    }
+  });
+})();
+</script>
+  
 </body>
 </html>
