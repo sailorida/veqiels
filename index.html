@@ -81,14 +81,67 @@
     </div>
   </div>
   
-  <div class="fixed bottom-4 left-4 z-50 aero-panel flex items-center gap-3 px-3 py-2 fade-in-up" style="animation-delay:0.5s">
-  <audio id="bg-audio" src="https://ia600505.us.archive.org/9/items/adore_-_dancing_while_the_world_burns_mp3.pm/adore_-_dancing_while_the_world_burns_%28mp3.pm%29.mp3" preload="auto" loop></audio>
-  <button type="button" id="play-btn" aria-label="play" class="aero-mini-btn">&#9654;</button>
-  <span class="text-[0.65rem] tracking-wide text-muted-foreground">music</span>
-  <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.15" aria-label="volume" style="width:60px;accent-color:var(--foreground);"/>
-  <div class="aero-progress ml-auto"><div class="aero-progress-fill" id="progress-fill" style="width:0%"></div></div>
-</div>
+<div class="fixed bottom-4 left-4 z-50 aero-panel flex items-center gap-3 px-3 py-2 fade-in-up" style="animation-delay:0.5s">
+    <audio id="bg-audio" src="https://ia600505.us.archive.org/9/items/adore_-_dancing_while_the_world_burns_mp3.pm/adore_-_dancing_while_the_world_burns_%28mp3.pm%29.mp3" preload="auto" loop></audio>
+    <button type="button" id="play-btn" aria-label="play" class="aero-mini-btn">&#9654;</button>
+    <span class="text-[0.65rem] tracking-wide text-muted-foreground">music</span>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.15" aria-label="volume" style="width:60px;accent-color:var(--foreground);"/>
+    <div class="aero-progress ml-auto"><div class="aero-progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
 
+  </script>
+
+  <script>
+(function () {
+  var audio = document.getElementById('bg-audio');
+  var btn = document.getElementById('play-btn');
+  var fill = document.getElementById('progress-fill');
+  var volumeSlider = document.getElementById('volume-slider');
+  if (!audio || !btn) return;
+
+  var DEFAULT_VOLUME = 0.15;
+  audio.volume = DEFAULT_VOLUME;
+  if (volumeSlider) volumeSlider.value = DEFAULT_VOLUME;
+
+  function setPlayingUI(isPlaying) {
+    btn.innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9654;';
+  }
+
+  btn.addEventListener('click', function () {
+    if (audio.paused) { audio.play().catch(function(){}); }
+    else { audio.pause(); }
+  });
+
+  audio.addEventListener('play', function () { setPlayingUI(true); });
+  audio.addEventListener('pause', function () { setPlayingUI(false); });
+
+  audio.addEventListener('timeupdate', function () {
+    if (audio.duration && fill) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+  });
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', function () {
+      audio.volume = parseFloat(volumeSlider.value);
+    });
+  }
+
+  function tryAutoplay() {
+    audio.play().catch(function () {
+      function startOnInteraction() {
+        audio.play().catch(function(){});
+        document.removeEventListener('click', startOnInteraction);
+        document.removeEventListener('keydown', startOnInteraction);
+      }
+      document.addEventListener('click', startOnInteraction, { once: true });
+      document.addEventListener('keydown', startOnInteraction, { once: true });
+    });
+  }
+  tryAutoplay();
+})();
+</script>
+  
+<script src="./assets/navigation.js"></script>
+  
 <div class="chatbox-corner" id="chatbox-corner">
   <button type="button" class="chatbox-toggle" id="chatbox-toggle" style="border:none;font:inherit">leave a note here ♡</button>
   <div class="chatbox-frame-wrap" id="chatbox-frame-wrap">
