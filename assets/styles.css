@@ -59,7 +59,7 @@
   background: var(--background);
 }
 
-.chatbox-corner:hover .chatbox-frame-wrap {
+.chatbox-frame-wrap.is-open {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
