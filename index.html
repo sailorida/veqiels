@@ -131,6 +131,55 @@
   });
 })();
 </script>
+
+<script>
+(function () {
+  var audio = document.getElementById('bg-audio');
+  var btn = document.getElementById('play-btn');
+  var fill = document.getElementById('progress-fill');
+  var volumeSlider = document.getElementById('volume-slider');
+  if (!audio || !btn) return;
+
+  var DEFAULT_VOLUME = 0.15;
+  audio.volume = DEFAULT_VOLUME;
+  if (volumeSlider) volumeSlider.value = DEFAULT_VOLUME;
+
+  function setPlayingUI(isPlaying) {
+    btn.innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9654;';
+  }
+
+  btn.addEventListener('click', function () {
+    if (audio.paused) { audio.play().catch(function(){}); }
+    else { audio.pause(); }
+  });
+
+  audio.addEventListener('play', function () { setPlayingUI(true); });
+  audio.addEventListener('pause', function () { setPlayingUI(false); });
+
+  audio.addEventListener('timeupdate', function () {
+    if (audio.duration && fill) fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+  });
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', function () {
+      audio.volume = parseFloat(volumeSlider.value);
+    });
+  }
+
+  function tryAutoplay() {
+    audio.play().catch(function () {
+      function startOnInteraction() {
+        audio.play().catch(function(){});
+        document.removeEventListener('click', startOnInteraction);
+        document.removeEventListener('keydown', startOnInteraction);
+      }
+      document.addEventListener('click', startOnInteraction, { once: true });
+      document.addEventListener('keydown', startOnInteraction, { once: true });
+    });
+  }
+  tryAutoplay();
+})();
+</script>
   
 </body>
 </html>
